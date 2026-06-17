@@ -1,5 +1,5 @@
 // CONFIGURAÇÃO: Substituiremos pela URL do Cloudflare Worker depois
-const WORKER_URL = "https://oraculoia.jesue.workers.dev";
+const WORKER_URL = "https://oraculoia.jesue.workers.dev/";
 
 async function enviarDuvida(event) {
   event.preventDefault();
