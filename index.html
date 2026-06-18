@@ -1,42 +1,271 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Assistente de Dúvidas · IA Acadêmica</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal do Aluno - Oráculo IA</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --text-color: #c9d1d9;
+            --text-bright: #f0f6fc;
+            --ifsc-green: #2ea44f;
+            --neon-glow: #00ff66;
+            --border-color: #30363d;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 255, 102, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Cabeçalho com a Imagem de Capa integrada */
+        .header-banner {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(to bottom, rgba(13,17,23,0.3), var(--card-bg)), 
+                        url('capa-curso.png') center/cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
+            border-bottom: 2px solid var(--ifsc-green);
+        }
+
+        .header-banner::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(13, 17, 23, 0.5);
+            z-index: 1;
+        }
+
+        .header-title {
+            position: relative;
+            z-index: 2;
+            color: var(--text-bright);
+            font-size: 24px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .header-subtitle {
+            position: relative;
+            z-index: 2;
+            color: #8b949e;
+            font-size: 14px;
+            margin-top: 5px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+        }
+
+        /* Área do Chat */
+        .chat-container {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: #0f141c;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            line-height: 1.5;
+            font-size: 15px;
+        }
+
+        .message.bot {
+            background-color: #21262d;
+            color: var(--text-color);
+            align-self: flex-start;
+            border-left: 4px solid var(--ifsc-green);
+        }
+
+        .message.user {
+            background-color: #238636;
+            color: var(--text-bright);
+            align-self: flex-end;
+        }
+
+        /* Área de Input */
+        .input-area {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            background: var(--card-bg);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 70px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-bright);
+            padding: 12px;
+            font-size: 14px;
+            resize: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--ifsc-green);
+            box-shadow: 0 0 8px rgba(0, 255, 102, 0.2);
+        }
+
+        button {
+            background-color: var(--ifsc-green);
+            color: var(--text-bright);
+            border: none;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            align-self: flex-end;
+            transition: background-color 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            background-color: #2ea44fcc;
+            box-shadow: 0 0 10px rgba(0, 255, 102, 0.3);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* Scrollbar customizada mais elegante */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #484f58;
+        }
+    </style>
 </head>
 <body>
 
-  <header class="app-header">
     <div class="container">
-      <h1>Portal do Aluno · Suporte com IA</h1>
-      <p class="subtitle">Envie suas dúvidas sobre a matéria e receba orientações didáticas instantâneas.</p>
+        <!-- Banner Superior Interativo com a Imagem de Capa do IFSC -->
+        <div class="header-banner">
+            <div class="header-title">Portal do Aluno · Suporte com IA</div>
+            <div class="header-subtitle">Envie suas dúvidas sobre a matéria e receba orientações didáticas instantâneas baseadas no material oficial.</div>
+        </div>
+
+        <!-- Janela de Conversa -->
+        <div class="chat-container" id="chatBox">
+            <div class="message bot">
+                Olá! Sou seu assistente de IA. Em que posso te ajudar com os estudos hoje?
+            </div>
+        </div>
+
+        <!-- Envio de Mensagens -->
+        <div class="input-area">
+            <textarea id="userInput" placeholder="Digite aqui sua dúvida pedagógica... (Ex: Como utilizar a técnica de poucos disparos?)"></textarea>
+            <button id="sendBtn" onclick="enviarPergunta()">Perguntar à IA ⚡</button>
+        </div>
     </div>
-  </header>
 
-  <main class="container app-main">
-    <section class="chat-container">
-      <div id="chat-window" class="chat-window">
-        <div class="message system-message">
-          <p>Olá! Sou seu assistente de IA. Em que posso te ajudar com os estudos hoje?</p>
-        </div>
-      </div>
-    </section>
+    <script>
+        const chatBox = document.getElementById('chatBox');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
 
-    <section class="input-container">
-      <form id="form-duvida" onsubmit="enviarDuvida(event)">
-        <textarea id="input-student" placeholder="Digite aqui sua dúvida pedagógica... (Ex: Qual a diferença entre ciclo de compressão e absorção?)" required></textarea>
-        <div class="actions">
-          <button type="submit" class="btn btn-primary" id="btn-enviar">Perguntar à IA ✨</button>
-        </div>
-      </form>
-    </section>
-  </main>
+        // Permite enviar com Ctrl + Enter para ficar dinâmico
+        userInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                enviarPergunta();
+            }
+        });
 
-  <script src="app.js"></script>
+        async function enviarPergunta() {
+            const texto = userInput.value.trim();
+            if (!texto) return;
+
+            // Bloqueia interface durante a resposta
+            userInput.value = '';
+            userInput.disabled = true;
+            sendBtn.disabled = true;
+
+            // Adiciona balão do Usuário
+            const userDiv = document.createElement('div');
+            userDiv.className = 'message user';
+            userDiv.textContent = texto;
+            chatBox.appendChild(userDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Balão de carregando do Bot
+            const botDiv = document.createElement('div');
+            botDiv.className = 'message bot';
+            botDiv.textContent = 'Pensando...';
+            chatBox.appendChild(botDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            try {
+                // Altere para a URL correta do seu worker se necessário
+                const response = await fetch('https://oraculoia.jesue.workers.dev/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pergunta: texto })
+                });
+
+                const data = await response.json();
+                botDiv.textContent = data.resposta || "Erro ao obter resposta.";
+            } catch (error) {
+                botDiv.textContent = 'Erro de conexão com o Oráculo. Tente novamente.';
+            } finally {
+                // Desbloqueia a interface
+                userInput.disabled = false;
+                sendBtn.disabled = false;
+                userInput.focus();
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+    </script>
+
 </body>
 </html>
