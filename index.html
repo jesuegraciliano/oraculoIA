@@ -28,10 +28,79 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             min-height: 100vh;
             padding: 20px;
         }
 
+        /* Tela de Login */
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 255, 102, 0.05);
+        }
+
+        .login-container h2 {
+            color: var(--text-bright);
+            margin-bottom: 10px;
+            font-size: 22px;
+        }
+
+        .login-container p {
+            color: #8b949e;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-bright);
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .login-input:focus {
+            border-color: var(--ifsc-green);
+            box-shadow: 0 0 8px rgba(0, 255, 102, 0.2);
+        }
+
+        .login-btn {
+            width: 100%;
+            background-color: var(--ifsc-green);
+            color: var(--text-bright);
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .login-btn:hover {
+            background-color: #2ea44fcc;
+        }
+
+        .error-message {
+            color: #ff7b72;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Interface Principal (Inicia oculta) */
         .container {
             width: 100%;
             max-width: 850px;
@@ -40,7 +109,7 @@
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 0 20px rgba(0, 255, 102, 0.05);
-            display: flex;
+            display: none; /* Oculto até acertar a senha */
             flex-direction: column;
         }
 
@@ -199,27 +268,31 @@
 </head>
 <body>
 
-    <div class="container">
-        <!-- Banner Superior Interativo com o Novo Nome -->
+    <div class="login-container" id="loginScreen">
+        <h2>Área Restrita</h2>
+        <p>Insira a senha de acesso para utilizar o Oráculo.</p>
+        <input type="password" id="passwordInput" class="login-input" placeholder="Digite a senha...">
+        <button class="login-btn" onclick="verificarSenha()">Acessar Oráculo 🔐</button>
+        <div class="error-message" id="errorMessage">Senha incorreta. Tente novamente!</div>
+    </div>
+
+    <div class="container" id="mainContent">
         <div class="header-banner">
             <div class="header-title">ORÁCULO DA IA GENERATIVA</div>
             <div class="header-subtitle">Envie suas dúvidas sobre a matéria e receba orientações didáticas instantâneas baseadas no material oficial.</div>
         </div>
 
-        <!-- Janela de Conversa -->
         <div class="chat-container" id="chatBox">
             <div class="message bot">
                 Olá! Sou seu assistente de IA. Em que posso te ajudar com os estudos hoje?
             </div>
         </div>
 
-        <!-- Envio de Mensagens -->
         <div class="input-area">
             <textarea id="userInput" placeholder="Digite aqui sua dúvida ... (Ex: Como utilizar a técnica de poucos disparos?)"></textarea>
             <button id="sendBtn" onclick="enviarPergunta()">Perguntar à IA ⚡</button>
         </div>
 
-        <!-- Rodapé de Autoria Adicionado -->
         <div class="footer-credits">
             Aplicativo de IA desenvolvido por Jesué Graciliano da Silva - Use o conversor markdown https://jesuegraciliano.github.io/convertepdf/ jesue@ifsc.edu.br
         </div>
@@ -229,6 +302,31 @@
         const chatBox = document.getElementById('chatBox');
         const userInput = document.getElementById('userInput');
         const sendBtn = document.getElementById('sendBtn');
+        const passwordInput = document.getElementById('passwordInput');
+        const loginScreen = document.getElementById('loginScreen');
+        const mainContent = document.getElementById('mainContent');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Atalho de Enter para o campo de senha
+        passwordInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                verificarSenha();
+            }
+        });
+
+        // Função que valida a senha de entrada
+        function verificarSenha() {
+            const senhaCorreta = "jesueifsc";
+            if (passwordInput.value === senhaCorreta) {
+                loginScreen.style.display = 'none';      // Oculta tela de login
+                mainContent.style.display = 'flex';     // Mostra o Chat
+                userInput.focus();                      // Dá foco no input do chat
+            } else {
+                errorMessage.style.display = 'block';   // Mostra erro
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        }
 
         userInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
